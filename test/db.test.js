@@ -5,6 +5,7 @@ const uuid = require('uuid-base62')
 const r = require('rethinkdb')
 const Db = require('../')
 const fixture = require('./fixtures')
+const utils = require('./../lib/utils')
 
 // test.before('setup database', async t => {
 test.beforeEach('setup database', async t => {
@@ -89,4 +90,21 @@ test('list all images', async t => {
   let result = await db.getImages()
 
   t.is(created.length, result.length)
+})
+
+test('save user', async t => {
+  let db = t.context.db
+
+  t.is(typeof db.saveUser, 'function', 'saveUser is function')
+
+  let user = fixture.getUser()
+  let plainPassword = user.password
+  let created = await db.saveUser(user)
+
+  t.is(created.username, user.username)
+  t.is(created.email, user.email)
+  t.is(created.name, user.name)
+  t.is(created.password, utils.encrypt(plainPassword))
+  t.is(typeof created.id, 'string')
+  t.truthy(created.createdAt)
 })

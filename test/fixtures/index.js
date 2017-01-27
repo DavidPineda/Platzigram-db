@@ -20,6 +20,15 @@ const fixtures = {
     }
 
     return images
+  },
+
+  getUser () {
+    return {
+      name: 'A ramdom user',
+      username: `user_${uuid.v4()}`,
+      password: uuid.uuid(),
+      email: `${uuid.v4()}@platzi.test`
+    }
   }
 }
 
